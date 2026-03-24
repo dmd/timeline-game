@@ -1,0 +1,507 @@
+[
+  {
+    "event": "Formation of the Sun and solar system",
+    "year": -4600000000,
+    "category": "earth"
+  },
+  {
+    "event": "Formation of Earth",
+    "year": -4540000000,
+    "category": "earth"
+  },
+  {
+    "event": "Formation of the Moon (giant impact)",
+    "year": -4500000000,
+    "category": "earth"
+  },
+  {
+    "event": "Earliest evidence of life (stromatolites)",
+    "year": -3500000000,
+    "category": "earth"
+  },
+  {
+    "event": "Photosynthesis evolves in cyanobacteria",
+    "year": -3400000000,
+    "category": "earth"
+  },
+  {
+    "event": "First eukaryotic cells appear",
+    "year": -2100000000,
+    "category": "earth"
+  },
+  {
+    "event": "Sexual reproduction evolves",
+    "year": -1200000000,
+    "category": "earth"
+  },
+  {
+    "event": "First complex multicellular organisms",
+    "year": -1000000000,
+    "category": "earth"
+  },
+  {
+    "event": "Snowball Earth glaciation covers the planet in ice",
+    "year": -700000000,
+    "category": "earth"
+  },
+  {
+    "event": "Cambrian Explosion: most major animal phyla appear",
+    "year": -541000000,
+    "category": "earth"
+  },
+  {
+    "event": "First fish evolve",
+    "year": -530000000,
+    "category": "earth"
+  },
+  {
+    "event": "First coral reefs form",
+    "year": -485000000,
+    "category": "earth"
+  },
+  {
+    "event": "First land plants colonize the shore",
+    "year": -470000000,
+    "category": "earth"
+  },
+  {
+    "event": "First animals walk on land (arthropods)",
+    "year": -430000000,
+    "category": "earth"
+  },
+  {
+    "event": "First insects evolve",
+    "year": -400000000,
+    "category": "earth"
+  },
+  {
+    "event": "First tetrapods walk on land",
+    "year": -375000000,
+    "category": "earth"
+  },
+  {
+    "event": "First seed plants",
+    "year": -360000000,
+    "category": "earth"
+  },
+  {
+    "event": "Vast coal-forming forests cover the continents",
+    "year": -350000000,
+    "category": "earth"
+  },
+  {
+    "event": "First reptiles evolve",
+    "year": -312000000,
+    "category": "earth"
+  },
+  {
+    "event": "Permian-Triassic extinction kills 90% of species",
+    "year": -252000000,
+    "category": "earth"
+  },
+  {
+    "event": "First dinosaurs appear",
+    "year": -230000000,
+    "category": "earth"
+  },
+  {
+    "event": "First mammals evolve",
+    "year": -225000000,
+    "category": "earth"
+  },
+  {
+    "event": "Triassic-Jurassic mass extinction",
+    "year": -201000000,
+    "category": "earth"
+  },
+  {
+    "event": "First birds (Archaeopteryx)",
+    "year": -150000000,
+    "category": "earth"
+  },
+  {
+    "event": "First flowering plants appear",
+    "year": -130000000,
+    "category": "earth"
+  },
+  {
+    "event": "Chicxulub asteroid impact ends the age of dinosaurs",
+    "year": -66000000,
+    "category": "earth"
+  },
+  {
+    "event": "First primates appear",
+    "year": -55000000,
+    "category": "earth"
+  },
+  {
+    "event": "Whales return to the sea",
+    "year": -50000000,
+    "category": "earth"
+  },
+  {
+    "event": "Himalayas begin to form",
+    "year": -50000000,
+    "category": "earth"
+  },
+  {
+    "event": "Antarctic ice sheet forms",
+    "year": -34000000,
+    "category": "earth"
+  },
+  {
+    "event": "First great apes appear",
+    "year": -20000000,
+    "category": "earth"
+  },
+  {
+    "event": "First hominins walk upright",
+    "year": -6000000,
+    "category": "earth"
+  },
+  {
+    "event": "Oldest known stone tools (Lomekwi, Kenya)",
+    "year": -3300000,
+    "category": "earth"
+  },
+  {
+    "event": "Controlled use of fire",
+    "year": -1000000,
+    "category": "earth"
+  },
+  {
+    "event": "Homo sapiens appears in Africa",
+    "year": -300000,
+    "category": "earth"
+  },
+  {
+    "event": "Toba supervolcano eruption",
+    "year": -74000,
+    "category": "earth"
+  },
+  {
+    "event": "Modern humans migrate out of Africa",
+    "year": -70000,
+    "category": "earth"
+  },
+  {
+    "event": "Oldest known figurative cave art",
+    "year": -45000,
+    "category": "earth"
+  },
+  {
+    "event": "Neanderthals go extinct",
+    "year": -40000,
+    "category": "earth"
+  },
+  {
+    "event": "Oldest known pottery (Xianrendong Cave, China)",
+    "year": -20000,
+    "category": "earth"
+  },
+  {
+    "event": "Domestication of dogs",
+    "year": -15000,
+    "category": "earth"
+  },
+  {
+    "event": "Last Ice Age ends",
+    "year": -11700,
+    "category": "earth"
+  },
+  {
+    "event": "Beginning of agriculture in the Fertile Crescent",
+    "year": -10000,
+    "category": "agriculture"
+  },
+  {
+    "event": "Earliest known cities emerge (Uruk, Mesopotamia)",
+    "year": -4000,
+    "category": "civilization"
+  },
+  {
+    "event": "Invention of the wheel",
+    "year": -3500,
+    "category": "technology"
+  },
+  {
+    "event": "Domestication of horses",
+    "year": -3500,
+    "category": "agriculture"
+  },
+  {
+    "event": "Invention of writing (Sumerian cuneiform)",
+    "year": -3400,
+    "category": "communication"
+  },
+  {
+    "event": "Egyptian hieroglyphics develop",
+    "year": -3200,
+    "category": "communication"
+  },
+  {
+    "event": "Construction of Stonehenge begins",
+    "year": -3000,
+    "category": "engineering"
+  },
+  {
+    "event": "Construction of the Great Pyramid of Giza",
+    "year": -2560,
+    "category": "engineering"
+  },
+  {
+    "event": "Phoenician alphabet created",
+    "year": -1050,
+    "category": "communication"
+  },
+  {
+    "event": "First Olympic Games held in Greece",
+    "year": -776,
+    "category": "culture"
+  },
+  {
+    "event": "Library of Alexandria founded",
+    "year": -283,
+    "category": "culture"
+  },
+  {
+    "event": "Archimedes discovers principles of buoyancy and the lever",
+    "year": -250,
+    "category": "science"
+  },
+  {
+    "event": "Great Wall of China construction begins (Qin dynasty)",
+    "year": -221,
+    "category": "engineering"
+  },
+  {
+    "event": "Invention of paper (Cai Lun, China)",
+    "year": 105,
+    "category": "communication"
+  },
+  {
+    "event": "Zero used as a number (Brahmagupta, India)",
+    "year": 628,
+    "category": "science"
+  },
+  {
+    "event": "Gunpowder invented in China",
+    "year": 850,
+    "category": "warfare"
+  },
+  {
+    "event": "Movable type printing (Bi Sheng, China)",
+    "year": 1040,
+    "category": "communication"
+  },
+  {
+    "event": "Magnetic compass adopted for navigation (China)",
+    "year": 1100,
+    "category": "navigation"
+  },
+  {
+    "event": "Mechanical clock invented in Europe",
+    "year": 1280,
+    "category": "technology"
+  },
+  {
+    "event": "Eyeglasses invented",
+    "year": 1286,
+    "category": "technology"
+  },
+  {
+    "event": "Gutenberg printing press",
+    "year": 1440,
+    "category": "communication"
+  },
+  {
+    "event": "Columbus reaches the Americas",
+    "year": 1492,
+    "category": "exploration"
+  },
+  {
+    "event": "Telescope invented",
+    "year": 1608,
+    "category": "science"
+  },
+  {
+    "event": "American Declaration of Independence signed",
+    "year": 1776,
+    "category": "politics"
+  },
+  {
+    "event": "First hot air balloon flight (Montgolfier brothers)",
+    "year": 1783,
+    "category": "transportation"
+  },
+  {
+    "event": "Smallpox vaccine developed (Jenner)",
+    "year": 1796,
+    "category": "medicine"
+  },
+  {
+    "event": "First electric battery (Volta)",
+    "year": 1800,
+    "category": "energy"
+  },
+  {
+    "event": "First steam locomotive (Trevithick)",
+    "year": 1804,
+    "category": "transportation"
+  },
+  {
+    "event": "Mechanical refrigeration patented (Perkins)",
+    "year": 1834,
+    "category": "technology"
+  },
+  {
+    "event": "Anesthesia first used in surgery (ether)",
+    "year": 1846,
+    "category": "medicine"
+  },
+  {
+    "event": "Dynamite patented (Nobel)",
+    "year": 1867,
+    "category": "technology"
+  },
+  {
+    "event": "Transcontinental railroad completed (US)",
+    "year": 1869,
+    "category": "transportation"
+  },
+  {
+    "event": "Telephone invented (Bell)",
+    "year": 1876,
+    "category": "communication"
+  },
+  {
+    "event": "Incandescent light bulb (Edison)",
+    "year": 1879,
+    "category": "energy"
+  },
+  {
+    "event": "First practical automobile (Benz Patent-Motorwagen)",
+    "year": 1886,
+    "category": "transportation"
+  },
+  {
+    "event": "First radio transmission (Marconi)",
+    "year": 1895,
+    "category": "communication"
+  },
+  {
+    "event": "Powered heavier-than-air flight (Wright brothers)",
+    "year": 1903,
+    "category": "transportation"
+  },
+  {
+    "event": "Women's suffrage in the US (19th Amendment)",
+    "year": 1920,
+    "category": "politics"
+  },
+  {
+    "event": "Insulin first used to treat diabetes",
+    "year": 1922,
+    "category": "medicine"
+  },
+  {
+    "event": "First television demonstration (Baird)",
+    "year": 1926,
+    "category": "communication"
+  },
+  {
+    "event": "Discovery of penicillin (Fleming)",
+    "year": 1928,
+    "category": "medicine"
+  },
+  {
+    "event": "ENIAC, first general-purpose electronic computer",
+    "year": 1945,
+    "category": "computing"
+  },
+  {
+    "event": "Transistor invented (Bell Labs)",
+    "year": 1947,
+    "category": "computing"
+  },
+  {
+    "event": "Structure of DNA discovered (Watson and Crick)",
+    "year": 1953,
+    "category": "science"
+  },
+  {
+    "event": "Polio vaccine announced (Salk)",
+    "year": 1955,
+    "category": "medicine"
+  },
+  {
+    "event": "Sputnik launched (first artificial satellite)",
+    "year": 1957,
+    "category": "space"
+  },
+  {
+    "event": "First human in space (Gagarin)",
+    "year": 1961,
+    "category": "space"
+  },
+  {
+    "event": "First human heart transplant (Barnard)",
+    "year": 1967,
+    "category": "medicine"
+  },
+  {
+    "event": "Moon landing (Apollo 11)",
+    "year": 1969,
+    "category": "space"
+  },
+  {
+    "event": "ARPANET sends its first message",
+    "year": 1969,
+    "category": "computing"
+  },
+  {
+    "event": "First microprocessor released (Intel 4004)",
+    "year": 1971,
+    "category": "computing"
+  },
+  {
+    "event": "First GPS satellite launched",
+    "year": 1978,
+    "category": "navigation"
+  },
+  {
+    "event": "Smallpox declared eradicated",
+    "year": 1980,
+    "category": "medicine"
+  },
+  {
+    "event": "IBM Personal Computer released",
+    "year": 1981,
+    "category": "computing"
+  },
+  {
+    "event": "Chernobyl nuclear disaster",
+    "year": 1986,
+    "category": "energy"
+  },
+  {
+    "event": "World Wide Web invented (Berners-Lee)",
+    "year": 1989,
+    "category": "computing"
+  },
+  {
+    "event": "Wikipedia launched",
+    "year": 2001,
+    "category": "communication"
+  },
+  {
+    "event": "iPhone released",
+    "year": 2007,
+    "category": "computing"
+  },
+  {
+    "event": "COVID-19 pandemic begins",
+    "year": 2020,
+    "category": "disease"
+  }
+]
