@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timeline</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #faf7f2;
+      color: #3c2415;
+      font-family: Georgia, 'Times New Roman', serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    /* ── Screen containers ── */
+    #start-screen,
+    #game-screen,
+    #results-screen {
+      width: 100%;
+      max-width: 800px;
+    }
+
+    /* ── Start screen ── */
+    #start-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    #start-screen h1 {
+      font-size: clamp(2.8rem, 8vw, 5rem);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #3c2415;
+      line-height: 1.1;
+      /* subtle text shadow for depth */
+      text-shadow: 0 2px 6px rgba(60, 36, 21, 0.12);
+    }
+
+    /* decorative rule beneath the title */
+    #start-screen h1::after {
+      content: '';
+      display: block;
+      width: 4rem;
+      height: 3px;
+      background: #8b7355;
+      margin: 0.6rem auto 0;
+      border-radius: 2px;
+    }
+
+    .instructions {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: #5a3e28;
+      max-width: 520px;
+      background: #fff;
+      border: 1px solid #d4c5a9;
+      border-radius: 6px;
+      padding: 1.25rem 1.75rem;
+      box-shadow: 0 2px 8px rgba(60, 36, 21, 0.07);
+    }
+
+    /* ── Play button ── */
+    #play-btn {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #faf7f2;
+      background: #3c2415;
+      border: none;
+      border-radius: 6px;
+      padding: 0.9rem 3.5rem;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.12s, box-shadow 0.18s;
+      box-shadow: 0 3px 10px rgba(60, 36, 21, 0.25);
+    }
+
+    #play-btn:hover {
+      background: #5a3e28;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 14px rgba(60, 36, 21, 0.32);
+    }
+
+    #play-btn:active {
+      background: #2a1a0e;
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(60, 36, 21, 0.2);
+    }
+
+    /* ── Game & results screens (unstyled placeholders) ── */
+    #game-screen,
+    #results-screen {
+      padding: 2rem;
+    }
+
+    /* ── Mega Timeline Tier Selector ── */
+    #tier-selector {
+      margin-bottom: 1.5rem;
+    }
+
+    .mt-label {
+      font-size: 0.8rem;
+      font-variant: small-caps;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #8b7355;
+      margin-bottom: 0.35rem;
+    }
+
+    .mt-hint {
+      font-variant: normal;
+      text-transform: none;
+      letter-spacing: normal;
+      font-style: italic;
+      font-size: 0.75rem;
+    }
+
+    .mt-bar {
+      display: flex;
+      width: 100%;
+      height: 46px;
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid #d4c5a9;
+    }
+
+    .tier-seg {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #faf7f2;
+      cursor: pointer;
+      transition: filter 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
+      background-image: linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(0,0,0,0.12));
+      background-blend-mode: overlay;
+    }
+
+    .tier-seg:hover {
+      filter: brightness(1.2);
+    }
+
+    .tier-seg.active {
+      box-shadow: inset 0 0 0 3px #d4a017;
+      filter: brightness(1.15);
+      z-index: 2;
+    }
+
+    .seg-name {
+      font-size: 0.8rem;
+      font-weight: bold;
+      white-space: nowrap;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+      line-height: 1.2;
+    }
+
+    .seg-range {
+      font-size: 0.6rem;
+      white-space: nowrap;
+      opacity: 0.85;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .tier-seg-narrow {
+      overflow: visible;
+    }
+
+    .tier-seg-narrow .seg-name {
+      font-size: 0.65rem;
+      position: relative;
+      z-index: 3;
+    }
+
+    .mt-sliver {
+      min-width: 5px;
+      position: relative;
+      cursor: default;
+    }
+
+    .mt-callout {
+      text-align: right;
+      font-size: 0.75rem;
+      color: #8b7355;
+      font-style: italic;
+      margin: 0.3rem 0 0;
+      padding-right: 2px;
+    }
+
+    .mt-connector {
+      width: 100%;
+      height: 28px;
+      display: block;
+    }
+
+    .mt-connector polygon {
+      fill: #3c2415;
+      opacity: 0.12;
+    }
+
+    .mt-connector line {
+      stroke: #3c2415;
+      stroke-width: 2;
+      opacity: 0.6;
+    }
+
+    .mt-instruction {
+      text-align: center;
+      font-size: 1rem;
+      color: #3c2415;
+      margin-top: 1rem;
+      font-style: italic;
+    }
+
+    /* ── Card / panel base (ready for Task 2+) ── */
+    .card {
+      background: #fff;
+      border: 1px solid #d4c5a9;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(60, 36, 21, 0.07);
+      padding: 1rem 1.25rem;
+    }
+
+    /* ── Accent color utility ── */
+    .accent { color: #8b7355; }
+
+    /* ── Game screen layout fix: start from top, not vertically centered ── */
+    #game-screen {
+      align-self: flex-start;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+      max-width: 80vw;
+    }
+
+    /* ── Event card ── */
+    #event-card {
+      background: #fff;
+      border: 1px solid #d4c5a9;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(60, 36, 21, 0.07);
+      padding: 1.25rem 1.75rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .card-label {
+      font-size: 0.8rem;
+      font-variant: small-caps;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #8b7355;
+    }
+
+    #event-name {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #3c2415;
+      margin-top: 0.5rem;
+    }
+
+    /* ── Progress bar ── */
+    #progress {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      color: #8b7355;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    /* (tier-selector styles are above) */
+
+    /* ── Timeline area ── */
+    #timeline-area {
+      min-height: 120px;
+      position: relative;
+    }
+
+    .timeline-bar {
+      position: relative;
+      height: 80px;
+      margin-top: 1rem;
+      cursor: crosshair;
+    }
+
+    .timeline-line {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #3c2415;
+    }
+
+    .tick {
+      position: absolute;
+      top: 0;
+      transform: translateX(-50%);
+    }
+
+    .tick-line {
+      width: 1px;
+      height: 12px;
+      background: #8b7355;
+      margin: 34px auto 0;
+    }
+
+    .tick-label {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #3c2415;
+      margin-top: 6px;
+      white-space: nowrap;
+    }
+
+    /* ── Next button ── */
+    #next-btn {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #faf7f2;
+      background: #3c2415;
+      border: none;
+      border-radius: 6px;
+      padding: 0.9rem 3.5rem;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.12s, box-shadow 0.18s;
+      box-shadow: 0 3px 10px rgba(60, 36, 21, 0.25);
+      display: block;
+      margin: 1rem auto 0;
+    }
+
+    #next-btn:hover {
+      background: #5a3e28;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 14px rgba(60, 36, 21, 0.32);
+    }
+
+    #next-btn:active {
+      background: #2a1a0e;
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(60, 36, 21, 0.2);
+    }
+
+    /* ── Markers ── */
+    .marker {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: translateX(-50%);
+    }
+
+    .marker::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      transform: translateX(-50%);
+    }
+
+    .guess-marker::before {
+      border-left: 2px dashed #3c2415;
+    }
+
+    .correct-marker::before {
+      border-left: 2px solid #2e7d32;
+    }
+
+    .marker-label {
+      font-size: 0.75rem;
+      white-space: nowrap;
+      background: #fff;
+      padding: 2px 6px;
+      border-radius: 3px;
+      border: 1px solid #d4c5a9;
+      position: relative;
+      margin-top: 2px;
+    }
+
+    .guess-marker .marker-label {
+      color: #3c2415;
+    }
+
+    .correct-marker .marker-label {
+      color: #2e7d32;
+      border-color: #2e7d32;
+    }
+
+    /* ── Feedback ── */
+    @keyframes feedback-pop {
+      0%   { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .feedback {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-top: 16px;
+      font-style: italic;
+      animation: feedback-pop 0.3s ease-out;
+    }
+
+    /* ── Wrong-tier note ── */
+    .wrong-tier-note {
+      font-size: 0.95rem;
+      text-align: center;
+      color: #8b7355;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    /* ── Hover preview marker ── */
+    .preview-marker {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      transform: translateX(-50%);
+      pointer-events: none;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .preview-marker::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      border-left: 1px dashed rgba(60, 36, 21, 0.4);
+      transform: translateX(-50%);
+    }
+
+    .preview-marker-label {
+      font-size: 0.7rem;
+      white-space: nowrap;
+      color: rgba(60, 36, 21, 0.5);
+      background: rgba(250, 247, 242, 0.85);
+      padding: 1px 5px;
+      border-radius: 3px;
+      margin-top: 2px;
+    }
+
+    /* ── Responsive tweaks ── */
+    @media (max-width: 480px) {
+      #start-screen {
+        padding: 2rem 1rem;
+        gap: 1.5rem;
+      }
+
+      .instructions {
+        font-size: 1rem;
+        padding: 1rem 1.25rem;
+      }
+
+      #play-btn {
+        padding: 0.8rem 2.5rem;
+        font-size: 1.05rem;
+      }
+    }
+    /* ── Results screen ── */
+    #results-screen {
+      align-self: flex-start;
+      margin-top: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    #results-screen h1 {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    #final-score {
+      font-size: 1.5rem;
+      text-align: center;
+      color: #3c2415;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+    }
+
+    .result-row {
+      background: #fff;
+      border: 1px solid #d4c5a9;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 8px;
+      box-shadow: 0 2px 6px rgba(60, 36, 21, 0.06);
+    }
+
+    .result-event {
+      font-weight: bold;
+      margin-bottom: 4px;
+      color: #3c2415;
+    }
+
+    .result-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      color: #8b7355;
+      font-size: 0.9rem;
+    }
+
+    .result-penalty {
+      font-weight: bold;
+    }
+
+    .bullseye { color: #d4a017; }
+    .hot      { color: #c0392b; }
+    .warm     { color: #e67e22; }
+    .cold     { color: #5b8fa8; }
+    .freezing { color: #2c6e8a; }
+
+    /* ── Mobile responsive ── */
+    @media (max-width: 600px) {
+      #start-screen h1 {
+        font-size: clamp(2rem, 10vw, 3rem);
+      }
+
+      .mt-bar {
+        height: 40px;
+      }
+
+      .seg-name {
+        font-size: 0.65rem;
+      }
+
+      .seg-range {
+        display: none;
+      }
+
+      .timeline-bar {
+        min-height: 60px;
+      }
+
+      #event-card {
+        width: 100%;
+      }
+
+      #event-name {
+        font-size: 1.1rem;
+      }
+
+      .tick-label {
+        font-size: 0.55rem;
+      }
+
+      #results-screen h1 {
+        font-size: 1.5rem;
+      }
+
+      #final-score {
+        font-size: 1.2rem;
+      }
+    }
+
+    /* ── Play Again button — shared style with play-btn and next-btn ── */
+    #play-again-btn {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #faf7f2;
+      background: #3c2415;
+      border: none;
+      border-radius: 6px;
+      padding: 0.9rem 3.5rem;
+      cursor: pointer;
+      transition: background 0.18s, transform 0.12s, box-shadow 0.18s;
+      box-shadow: 0 3px 10px rgba(60, 36, 21, 0.25);
+      display: block;
+      margin: 1.5rem auto 0;
+    }
+
+    #play-again-btn:hover {
+      background: #5a3e28;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 14px rgba(60, 36, 21, 0.32);
+    }
+
+    #play-again-btn:active {
+      background: #2a1a0e;
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(60, 36, 21, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <div id="start-screen">
+    <h1>Timeline</h1>
+    <p class="instructions">Place each event on the timeline. The closer you are, the lower your score. Lowest score wins!</p>
+    <button id="play-btn">Play</button>
+  </div>
+
+  <div id="game-screen" style="display:none">
+    <div id="event-card">
+      <div class="card-label">Place this event</div>
+      <div id="event-name"></div>
+    </div>
+    <div id="progress">
+      <span id="event-counter">1 of 10</span>
+      <span id="running-score">Score: 0</span>
+    </div>
+    <div id="tier-selector"></div>
+    <div id="timeline-area"></div>
+    <button id="next-btn" style="display:none">Next</button>
+  </div>
+
+  <div id="results-screen" style="display:none">
+    <h1>Results</h1>
+    <div id="final-score"></div>
+    <div id="results-list"></div>
+    <button id="play-again-btn">Play Again</button>
+  </div>
+
+  <script>
+    const EVENTS = [
+      { event: "Formation of the Sun and solar system", year: -4600000000, category: "earth" },
+      { event: "Formation of Earth", year: -4540000000, category: "earth" },
+      { event: "Formation of the Moon (giant impact)", year: -4500000000, category: "earth" },
+      { event: "Earliest evidence of life (stromatolites)", year: -3500000000, category: "earth" },
+      { event: "Photosynthesis evolves in cyanobacteria", year: -3400000000, category: "earth" },
+      { event: "First eukaryotic cells appear", year: -2100000000, category: "earth" },
+      { event: "Sexual reproduction evolves", year: -1200000000, category: "earth" },
+      { event: "First complex multicellular organisms", year: -1000000000, category: "earth" },
+      { event: "Snowball Earth glaciation covers the planet in ice", year: -700000000, category: "earth" },
+      { event: "Cambrian Explosion: most major animal phyla appear", year: -541000000, category: "earth" },
+      { event: "First fish evolve", year: -530000000, category: "earth" },
+      { event: "First coral reefs form", year: -485000000, category: "earth" },
+      { event: "First land plants colonize the shore", year: -470000000, category: "earth" },
+      { event: "First animals walk on land (arthropods)", year: -430000000, category: "earth" },
+      { event: "First insects evolve", year: -400000000, category: "earth" },
+      { event: "First tetrapods walk on land", year: -375000000, category: "earth" },
+      { event: "First seed plants", year: -360000000, category: "earth" },
+      { event: "Vast coal-forming forests cover the continents", year: -350000000, category: "earth" },
+      { event: "First reptiles evolve", year: -312000000, category: "earth" },
+      { event: "Permian-Triassic extinction kills 90% of species", year: -252000000, category: "earth" },
+      { event: "First dinosaurs appear", year: -230000000, category: "earth" },
+      { event: "First mammals evolve", year: -225000000, category: "earth" },
+      { event: "Triassic-Jurassic mass extinction", year: -201000000, category: "earth" },
+      { event: "First birds (Archaeopteryx)", year: -150000000, category: "earth" },
+      { event: "First flowering plants appear", year: -130000000, category: "earth" },
+      { event: "Chicxulub asteroid impact ends the age of dinosaurs", year: -66000000, category: "earth" },
+      { event: "First primates appear", year: -55000000, category: "earth" },
+      { event: "Whales return to the sea", year: -50000000, category: "earth" },
+      { event: "Himalayas begin to form", year: -50000000, category: "earth" },
+      { event: "Antarctic ice sheet forms", year: -34000000, category: "earth" },
+      { event: "First great apes appear", year: -20000000, category: "earth" },
+      { event: "First hominins walk upright", year: -6000000, category: "earth" },
+      { event: "Oldest known stone tools (Lomekwi, Kenya)", year: -3300000, category: "earth" },
+      { event: "Controlled use of fire", year: -1000000, category: "earth" },
+      { event: "Homo sapiens appears in Africa", year: -300000, category: "earth" },
+      { event: "Toba supervolcano eruption", year: -74000, category: "earth" },
+      { event: "Modern humans migrate out of Africa", year: -70000, category: "earth" },
+      { event: "Oldest known figurative cave art", year: -45000, category: "earth" },
+      { event: "Neanderthals go extinct", year: -40000, category: "earth" },
+      { event: "Oldest known pottery (Xianrendong Cave, China)", year: -20000, category: "earth" },
+      { event: "Domestication of dogs", year: -15000, category: "earth" },
+      { event: "Last Ice Age ends", year: -11700, category: "earth" },
+      { event: "Beginning of agriculture in the Fertile Crescent", year: -10000, category: "agriculture" },
+      { event: "Earliest known cities emerge (Uruk, Mesopotamia)", year: -4000, category: "civilization" },
+      { event: "Invention of the wheel", year: -3500, category: "technology" },
+      { event: "Domestication of horses", year: -3500, category: "agriculture" },
+      { event: "Invention of writing (Sumerian cuneiform)", year: -3400, category: "communication" },
+      { event: "Egyptian hieroglyphics develop", year: -3200, category: "communication" },
+      { event: "Construction of Stonehenge begins", year: -3000, category: "engineering" },
+      { event: "Construction of the Great Pyramid of Giza", year: -2560, category: "engineering" },
+      { event: "Phoenician alphabet created", year: -1050, category: "communication" },
+      { event: "First Olympic Games held in Greece", year: -776, category: "culture" },
+      { event: "Library of Alexandria founded", year: -283, category: "culture" },
+      { event: "Archimedes discovers principles of buoyancy and the lever", year: -250, category: "science" },
+      { event: "Great Wall of China construction begins (Qin dynasty)", year: -221, category: "engineering" },
+      { event: "Invention of paper (Cai Lun, China)", year: 105, category: "communication" },
+      { event: "Zero used as a number (Brahmagupta, India)", year: 628, category: "science" },
+      { event: "Gunpowder invented in China", year: 850, category: "warfare" },
+      { event: "Movable type printing (Bi Sheng, China)", year: 1040, category: "communication" },
+      { event: "Magnetic compass adopted for navigation (China)", year: 1100, category: "navigation" },
+      { event: "Mechanical clock invented in Europe", year: 1280, category: "technology" },
+      { event: "Eyeglasses invented", year: 1286, category: "technology" },
+      { event: "Gutenberg printing press", year: 1440, category: "communication" },
+      { event: "Columbus reaches the Americas", year: 1492, category: "exploration" },
+      { event: "Telescope invented", year: 1608, category: "science" },
+      { event: "American Declaration of Independence signed", year: 1776, category: "politics" },
+      { event: "First hot air balloon flight (Montgolfier brothers)", year: 1783, category: "transportation" },
+      { event: "Smallpox vaccine developed (Jenner)", year: 1796, category: "medicine" },
+      { event: "First electric battery (Volta)", year: 1800, category: "energy" },
+      { event: "First steam locomotive (Trevithick)", year: 1804, category: "transportation" },
+      { event: "Mechanical refrigeration patented (Perkins)", year: 1834, category: "technology" },
+      { event: "Anesthesia first used in surgery (ether)", year: 1846, category: "medicine" },
+      { event: "Dynamite patented (Nobel)", year: 1867, category: "technology" },
+      { event: "Transcontinental railroad completed (US)", year: 1869, category: "transportation" },
+      { event: "Telephone invented (Bell)", year: 1876, category: "communication" },
+      { event: "Incandescent light bulb (Edison)", year: 1879, category: "energy" },
+      { event: "First practical automobile (Benz Patent-Motorwagen)", year: 1886, category: "transportation" },
+      { event: "First radio transmission (Marconi)", year: 1895, category: "communication" },
+      { event: "Powered heavier-than-air flight (Wright brothers)", year: 1903, category: "transportation" },
+      { event: "Women's suffrage in the US (19th Amendment)", year: 1920, category: "politics" },
+      { event: "Insulin first used to treat diabetes", year: 1922, category: "medicine" },
+      { event: "First television demonstration (Baird)", year: 1926, category: "communication" },
+      { event: "Discovery of penicillin (Fleming)", year: 1928, category: "medicine" },
+      { event: "ENIAC, first general-purpose electronic computer", year: 1945, category: "computing" },
+      { event: "Transistor invented (Bell Labs)", year: 1947, category: "computing" },
+      { event: "Structure of DNA discovered (Watson and Crick)", year: 1953, category: "science" },
+      { event: "Polio vaccine announced (Salk)", year: 1955, category: "medicine" },
+      { event: "Sputnik launched (first artificial satellite)", year: 1957, category: "space" },
+      { event: "First human in space (Gagarin)", year: 1961, category: "space" },
+      { event: "First human heart transplant (Barnard)", year: 1967, category: "medicine" },
+      { event: "Moon landing (Apollo 11)", year: 1969, category: "space" },
+      { event: "ARPANET sends its first message", year: 1969, category: "computing" },
+      { event: "First microprocessor released (Intel 4004)", year: 1971, category: "computing" },
+      { event: "First GPS satellite launched", year: 1978, category: "navigation" },
+      { event: "Smallpox declared eradicated", year: 1980, category: "medicine" },
+      { event: "IBM Personal Computer released", year: 1981, category: "computing" },
+      { event: "Chernobyl nuclear disaster", year: 1986, category: "energy" },
+      { event: "World Wide Web invented (Berners-Lee)", year: 1989, category: "computing" },
+      { event: "Wikipedia launched", year: 2001, category: "communication" },
+      { event: "iPhone released", year: 2007, category: "computing" },
+      { event: "COVID-19 pandemic begins", year: 2020, category: "disease" },
+    ];
+
+    const TIERS = [
+      { name: "Deep Time", start: -4600000000, end: -500000000, label: "4.6 Bya – 500 Mya" },
+      { name: "Mesozoic", start: -500000000, end: -66000000, label: "500 Mya – 66 Mya" },
+      { name: "Cenozoic", start: -66000000, end: -10000, label: "66 Mya – 10,000 BC" },
+      { name: "Ancient", start: -10000, end: -500, label: "10,000 BC – 500 BC" },
+      { name: "Medieval+", start: -500, end: 1800, label: "500 BC – 1800" },
+      { name: "Modern", start: 1800, end: 2030, label: "1800 – Present" },
+    ];
+
+    const TIER_COLORS = ['#5c4033', '#5e6e3b', '#9e7c4a', '#8b5e3c', '#556270', '#3c2415'];
+
+    function getTier(year) {
+      for (let i = 0; i < TIERS.length; i++) {
+        const t = TIERS[i];
+        if (i === TIERS.length - 1) {
+          if (year >= t.start && year <= t.end) return t;
+        } else {
+          if (year >= t.start && year < t.end) return t;
+        }
+      }
+      return TIERS[TIERS.length - 1];
+    }
+
+    function formatYear(y) {
+      y = Math.round(y);
+      if (y === 0) y = 1;
+      if (y <= -1000000000) return (y / -1000000000).toFixed(1) + " Bya";
+      if (y <= -1000000) return Math.round(y / -1000000) + " Mya";
+      if (y <= -10000) return Math.round(y / -1000) + "K ya";
+      if (y < 0) return (-y) + " BC";
+      return String(y);
+    }
+
+    function makeTicks(start, end) {
+      const span = end - start;
+      const candidates = [
+        1000000000, 500000000, 100000000, 50000000, 10000000, 5000000,
+        1000000, 500000, 100000, 50000, 10000, 5000, 2000, 1000, 500,
+        200, 100, 50, 20, 10,
+      ];
+      let step = candidates[0];
+      for (const c of candidates) {
+        if (span / c >= 8) { step = c; break; }
+      }
+      const ticks = [];
+      let first = (Math.floor(start / step) + 1) * step;
+      for (let y = first; y <= end; y += step) {
+        ticks.push(y);
+      }
+      return ticks;
+    }
+
+    function calcPenalty(guessedYear, actualYear) {
+      const tier = getTier(actualYear);
+      const span = tier.end - tier.start;
+      const error = Math.abs(guessedYear - actualYear);
+      return Math.min(error / span * 100, 100);
+    }
+
+    function getHotCold(penalty) {
+      if (penalty <= 2) return { label: "Bullseye!", color: "#d4a017" };
+      if (penalty <= 10) return { label: "Hot!", color: "#c0392b" };
+      if (penalty <= 25) return { label: "Warm", color: "#e67e22" };
+      if (penalty <= 50) return { label: "Cold", color: "#5b8fa8" };
+      return { label: "Freezing", color: "#2c6e8a" };
+    }
+
+    function pickEvents() {
+      const arr = [...EVENTS];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr.slice(0, 10);
+    }
+
+    function showScreen(id) {
+      document.getElementById('start-screen').style.display = 'none';
+      document.getElementById('game-screen').style.display = 'none';
+      document.getElementById('results-screen').style.display = 'none';
+      document.getElementById(id).style.display = '';
+    }
+
+    let currentEvents = [];
+    let currentIndex = 0;
+    let totalScore = 0;
+    let placed = false;
+    let results = []; // { event, actualYear, guessedYear, penalty }
+
+    let activeTierIndex = -1;
+
+    document.getElementById('play-btn').addEventListener('click', () => startGame());
+
+    function startGame() {
+      currentEvents = pickEvents();
+      currentIndex = 0;
+      totalScore = 0;
+      placed = false;
+      results = [];
+      showScreen('game-screen');
+      renderTierSelector();
+      showEvent();
+    }
+
+    function showEvent() {
+      const ev = currentEvents[currentIndex];
+      document.getElementById('event-name').textContent = ev.event;
+      document.getElementById('event-counter').textContent = (currentIndex + 1) + ' of 10';
+      document.getElementById('running-score').textContent = 'Score: ' + totalScore.toFixed(1);
+      document.getElementById('next-btn').style.display = 'none';
+      document.getElementById('timeline-area').innerHTML = '';
+      placed = false;
+      activeTierIndex = -1;
+      document.querySelectorAll('.tier-seg').forEach(seg => seg.classList.remove('active'));
+    }
+
+    document.getElementById('timeline-area').addEventListener('click', (e) => {
+      if (placed || activeTierIndex < 0) return;
+      const bar = document.getElementById('timeline-bar');
+      if (!bar) return;
+      const rect = bar.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const pct = Math.max(0, Math.min(1, x / rect.width));
+      const tier = TIERS[activeTierIndex];
+      let guessedYear = tier.start + pct * (tier.end - tier.start);
+      guessedYear = Math.round(guessedYear);
+      if (guessedYear === 0) guessedYear = 1;
+      placeEvent(guessedYear);
+    });
+
+    document.getElementById('timeline-area').addEventListener('touchend', (e) => {
+      if (placed || activeTierIndex < 0) return;
+      const bar = document.getElementById('timeline-bar');
+      if (!bar) return;
+      const touch = e.changedTouches[0];
+      const rect = bar.getBoundingClientRect();
+      const x = touch.clientX - rect.left;
+      const pct = Math.max(0, Math.min(1, x / rect.width));
+      const tier = TIERS[activeTierIndex];
+      let guessedYear = tier.start + pct * (tier.end - tier.start);
+      guessedYear = Math.round(guessedYear);
+      if (guessedYear === 0) guessedYear = 1;
+      placeEvent(guessedYear);
+      e.preventDefault();
+    });
+
+    document.getElementById('timeline-area').addEventListener('mousemove', (e) => {
+      if (placed || activeTierIndex < 0) return;
+      const bar = document.getElementById('timeline-bar');
+      if (!bar) return;
+      const rect = bar.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      if (x < 0 || x > rect.width) {
+        removePreviewMarker();
+        return;
+      }
+      const pct = x / rect.width;
+      const tier = TIERS[activeTierIndex];
+      let previewYear = tier.start + pct * (tier.end - tier.start);
+      previewYear = Math.round(previewYear);
+      if (previewYear === 0) previewYear = 1;
+
+      let preview = document.getElementById('preview-marker');
+      if (!preview) {
+        preview = document.createElement('div');
+        preview.id = 'preview-marker';
+        preview.className = 'preview-marker';
+        preview.innerHTML = '<div class="preview-marker-label"></div>';
+        bar.appendChild(preview);
+      }
+      preview.style.left = (pct * 100) + '%';
+      preview.querySelector('.preview-marker-label').textContent = formatYear(previewYear);
+    });
+
+    document.getElementById('timeline-area').addEventListener('mouseleave', () => {
+      removePreviewMarker();
+    });
+
+    function removePreviewMarker() {
+      const preview = document.getElementById('preview-marker');
+      if (preview) preview.remove();
+    }
+
+    function placeEvent(guessedYear) {
+      placed = true;
+      removePreviewMarker();
+      const ev = currentEvents[currentIndex];
+      const penalty = calcPenalty(guessedYear, ev.year);
+      const feedback = getHotCold(penalty);
+      totalScore += penalty;
+
+      results.push({
+        event: ev.event,
+        actualYear: ev.year,
+        guessedYear: guessedYear,
+        penalty: penalty,
+      });
+
+      // Show guess marker on timeline
+      const tier = TIERS[activeTierIndex];
+      const bar = document.getElementById('timeline-bar');
+      const guessPct = (guessedYear - tier.start) / (tier.end - tier.start) * 100;
+      const guessMarker = document.createElement('div');
+      guessMarker.className = 'marker guess-marker';
+      guessMarker.style.left = guessPct + '%';
+      guessMarker.innerHTML = '<div class="marker-label">' + formatYear(guessedYear) + '</div>';
+      bar.appendChild(guessMarker);
+
+      // Show correct marker (only if same tier)
+      const correctTier = getTier(ev.year);
+      if (correctTier === tier) {
+        const correctPct = (ev.year - tier.start) / (tier.end - tier.start) * 100;
+        const correctMarker = document.createElement('div');
+        correctMarker.className = 'marker correct-marker';
+        correctMarker.style.left = correctPct + '%';
+        correctMarker.innerHTML = '<div class="marker-label">' + formatYear(ev.year) + '</div>';
+        bar.appendChild(correctMarker);
+      }
+
+      // Show feedback
+      showFeedback(feedback, correctTier !== tier, ev.year, correctTier);
+
+      // Update score
+      document.getElementById('running-score').textContent = 'Score: ' + totalScore.toFixed(1);
+
+      // Show Next button
+      document.getElementById('next-btn').style.display = '';
+    }
+
+    function showFeedback(feedback, wrongTier, actualYear, correctTier) {
+      const area = document.getElementById('timeline-area');
+      const feedbackEl = document.createElement('div');
+      feedbackEl.className = 'feedback';
+      feedbackEl.style.color = feedback.color;
+      feedbackEl.textContent = wrongTier
+        ? 'Wrong era!'
+        : feedback.label;
+      area.appendChild(feedbackEl);
+
+      // If wrong tier, show correct answer text note
+      if (wrongTier) {
+        const noteEl = document.createElement('div');
+        noteEl.className = 'wrong-tier-note';
+        noteEl.textContent = 'Correct answer: ' + formatYear(actualYear) + ' (' + correctTier.name + ')';
+        area.appendChild(noteEl);
+      }
+
+      // Color pulse on timeline bar
+      const bar = document.getElementById('timeline-bar');
+      bar.style.boxShadow = '0 0 20px ' + feedback.color + '40';
+      setTimeout(() => { bar.style.boxShadow = ''; }, 1500);
+    }
+
+    function showResults() {
+      showScreen('results-screen');
+      document.getElementById('final-score').textContent = 'Final Score: ' + totalScore.toFixed(1);
+
+      const list = document.getElementById('results-list');
+      list.innerHTML = '';
+      results.forEach((r, i) => {
+        const row = document.createElement('div');
+        row.className = 'result-row';
+        const penaltyClass = r.penalty <= 2 ? 'bullseye' : r.penalty <= 10 ? 'hot' : r.penalty <= 25 ? 'warm' : r.penalty <= 50 ? 'cold' : 'freezing';
+        row.innerHTML = `
+          <div class="result-event">${r.event}</div>
+          <div class="result-details">
+            <span class="result-guess">Your guess: ${formatYear(r.guessedYear)}</span>
+            <span class="result-actual">Actual: ${formatYear(r.actualYear)}</span>
+            <span class="result-penalty ${penaltyClass}">${r.penalty.toFixed(1)} pts</span>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    document.getElementById('play-again-btn').addEventListener('click', startGame);
+
+    document.getElementById('next-btn').addEventListener('click', () => {
+      currentIndex++;
+      if (currentIndex >= 10) {
+        showResults();
+      } else {
+        showEvent();
+      }
+    });
+
+    function renderTierSelector() {
+      const container = document.getElementById('tier-selector');
+      const sliverMin = 1.2; // minimum % for sliver visibility
+
+      let html = '';
+
+      // ── Bar 1: All of Time ──
+      // Deep Time + Mesozoic visible, sliver for everything from Cenozoic onward
+      const totalSpan = TIERS[5].end - TIERS[0].start;
+      const bar1Tiers = [TIERS[0], TIERS[1]];
+      const bar1Pcts = bar1Tiers.map(t => (t.end - t.start) / totalSpan * 100);
+      const bar1Total = bar1Pcts.reduce((a, b) => a + b, 0);
+      const bar1Scale = (100 - sliverMin) / bar1Total;
+      const bar1Display = bar1Pcts.map(p => p * bar1Scale);
+
+      html += '<div class="mt-label">All of Time</div>';
+      html += '<div class="mt-bar">';
+      for (let i = 0; i < 2; i++) {
+        const w = bar1Display[i];
+        const t = TIERS[i];
+        html += '<div class="tier-seg" data-tier="' + i + '" style="width:' + w + '%;background-color:' + TIER_COLORS[i] + '" onclick="selectTier(' + i + ')" title="' + t.name + ' (' + t.label + ')">';
+        if (w > 6) html += '<span class="seg-name">' + t.name + '</span>';
+        if (w > 15) html += '<span class="seg-range">' + t.label + '</span>';
+        html += '</div>';
+      }
+      html += '<div class="mt-sliver" style="width:' + sliverMin + '%;background:linear-gradient(to right, ' + TIER_COLORS[2] + ', ' + TIER_COLORS[3] + ', ' + TIER_COLORS[4] + ', ' + TIER_COLORS[5] + ')"></div>';
+      html += '</div>';
+      html += '<div class="mt-callout">Everything since the asteroid is that thin sliver \u2192</div>';
+
+      // Connector 1→2 (filled trapezoid from sliver to full-width bar)
+      const s1L = bar1Display.reduce((a, b) => a + b, 0) * 10;
+      const s1R = 1000;
+      html += '<svg class="mt-connector" viewBox="0 0 1000 40" preserveAspectRatio="none">';
+      html += '<polygon points="' + s1L + ',0 ' + s1R + ',0 1000,40 0,40"/>';
+      html += '<line x1="' + s1L + '" y1="0" x2="0" y2="40"/>';
+      html += '<line x1="' + s1R + '" y1="0" x2="1000" y2="40"/>';
+      html += '</svg>';
+
+      // ── Bar 2: Since the Asteroid (66 Mya – Present) ──
+      // Cenozoic visible, sliver for human history
+      const bar2Span = TIERS[5].end - TIERS[2].start;
+      const cenoPct = (TIERS[2].end - TIERS[2].start) / bar2Span * 100;
+      const cenoDisplay = (100 - sliverMin) * cenoPct / cenoPct; // just 100 - sliverMin
+
+      html += '<div class="mt-label">Since the Asteroid <span class="mt-hint">(expanded from the sliver above)</span></div>';
+      html += '<div class="mt-bar">';
+      html += '<div class="tier-seg" data-tier="2" style="width:' + (100 - sliverMin) + '%;background-color:' + TIER_COLORS[2] + '" onclick="selectTier(2)" title="' + TIERS[2].name + ' (' + TIERS[2].label + ')">';
+      html += '<span class="seg-name">' + TIERS[2].name + '</span>';
+      html += '<span class="seg-range">' + TIERS[2].label + '</span>';
+      html += '</div>';
+      html += '<div class="mt-sliver" style="width:' + sliverMin + '%;background:linear-gradient(to right, ' + TIER_COLORS[3] + ', ' + TIER_COLORS[4] + ', ' + TIER_COLORS[5] + ')"></div>';
+      html += '</div>';
+      html += '<div class="mt-callout">All of human civilization is that thin sliver \u2192</div>';
+
+      // Connector 2→3 (filled trapezoid from sliver to full-width bar)
+      const s2L = (100 - sliverMin) * 10;
+      const s2R = 1000;
+      html += '<svg class="mt-connector" viewBox="0 0 1000 40" preserveAspectRatio="none">';
+      html += '<polygon points="' + s2L + ',0 ' + s2R + ',0 1000,40 0,40"/>';
+      html += '<line x1="' + s2L + '" y1="0" x2="0" y2="40"/>';
+      html += '<line x1="' + s2R + '" y1="0" x2="1000" y2="40"/>';
+      html += '</svg>';
+
+      // ── Bar 3: Human History (10,000 BC – Present) ──
+      const humanSpan = TIERS.slice(3).reduce((sum, t) => sum + (t.end - t.start), 0);
+      const bar3Pcts = TIERS.slice(3).map(t => (t.end - t.start) / humanSpan * 100);
+
+      html += '<div class="mt-label">Human History <span class="mt-hint">(expanded from the sliver above)</span></div>';
+      html += '<div class="mt-bar">';
+      for (let i = 0; i < 3; i++) {
+        const tierIdx = i + 3;
+        const w = bar3Pcts[i];
+        const t = TIERS[tierIdx];
+        const narrow = w < 5;
+        html += '<div class="tier-seg' + (narrow ? ' tier-seg-narrow' : '') + '" data-tier="' + tierIdx + '" style="width:' + w + '%;background-color:' + TIER_COLORS[tierIdx] + '" onclick="selectTier(' + tierIdx + ')" title="' + t.name + ' (' + t.label + ')">';
+        html += '<span class="seg-name">' + t.name + '</span>';
+        if (w > 12) html += '<span class="seg-range">' + t.label + '</span>';
+        html += '</div>';
+      }
+      html += '</div>';
+
+      html += '<div class="mt-instruction">Click a section of the timeline to place your guess</div>';
+
+      container.innerHTML = html;
+    }
+
+    function selectTier(index) {
+      if (placed) return;
+      activeTierIndex = index;
+      document.querySelectorAll('.tier-seg').forEach(seg => {
+        seg.classList.toggle('active', parseInt(seg.dataset.tier) === index);
+      });
+      const tier = TIERS[index];
+      const area = document.getElementById('timeline-area');
+      const ticks = makeTicks(tier.start, tier.end);
+      area.innerHTML = `
+        <div class="timeline-bar" id="timeline-bar">
+          <div class="timeline-line"></div>
+          ${ticks.map(t => {
+            const pct = (t - tier.start) / (tier.end - tier.start) * 100;
+            return `<div class="tick" style="left:${pct}%">
+              <div class="tick-line"></div>
+              <div class="tick-label">${formatYear(t)}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
