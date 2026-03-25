@@ -4,7 +4,7 @@ A history trivia game where you place events on a timeline spanning from the for
 
 ## Play Online
 
-Open `index.html` in a browser. You'll get 10 random events — pick the right era, click where you think each event belongs on the timeline, and try to minimize your score (lower is better).
+**[Play now](https://3e.org/timeline.html)** or open `index.html` in a browser. You'll get 10 random events — pick the right era, click where you think each event belongs on the timeline, and try to minimize your score (lower is better).
 
 The timeline is divided into six tiers that zoom in progressively:
 
