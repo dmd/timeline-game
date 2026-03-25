@@ -25,7 +25,7 @@ There's also a printable card game version. The Python scripts generate PDFs usi
 - `generate_timelines.py` — printed timeline boards
 - `generate_answer_key.py` — answer key with all events and dates
 
-Run any script directly (requires [uv](https://github.com/astral-sh/uv) and Typst):
+Run any script directly (requires [uv](https://github.com/astral-sh/uv) and [Typst](https://typst.app/)):
 
 ```
 ./generate_cards.py
@@ -33,4 +33,4 @@ Run any script directly (requires [uv](https://github.com/astral-sh/uv) and Typs
 
 ## Data
 
-All events live in `timeline_events.json` — each entry has an event name, year, and category.
+The print & play scripts read from `timeline_events.json`. The web version has its own copy of the events embedded in `index.html`.
